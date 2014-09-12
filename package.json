@@ -9,6 +9,6 @@
   },
   "readmeFilename": "README.md",
   "dependencies" : {
-    "moment" : "~2.42.0"
+    "request" : "~2.42.0"
   }
 }
