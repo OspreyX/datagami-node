@@ -1,0 +1,14 @@
+{
+  "name": "datagami",
+  "version": "0.0.1",
+  "description": "Datagami API helper library for node.js apps",
+  "main": "datagami.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/datagami/nodejs-client.git"
+  },
+  "readmeFilename": "README.md",
+  "dependencies" : {
+    "moment" : "~2.42.0"
+  }
+}
