@@ -65,7 +65,7 @@ var datagami = (function() {
       if (api_result.status == "SUCCESS") {
         // if we haven't done any polling, this is a cached response returning,
         // which means we need to make a separate request to the model endpoint
-        // (i.e.
+        // (i.e. don't setTimeout, but do run nextTick with model URL)
         // TODO: this handling is something of a hack!
         // TODO: maybe the API should just redirect
         if (poll_count === 0) {
@@ -75,7 +75,7 @@ var datagami = (function() {
           opts.callback(api_result);
         }
 
-      } else if (api_result.status == "SUBMITTED" || api_result.status == "PENDING") {
+      } else if (api_result.status == "SUBMITTED" || api_result.status == "RUNNING" || api_result.status == "PENDING") {
         // job still running, wait and then poll again
         if (api_result.model_url) {
           url_to_poll = api_result.model_url;
@@ -85,7 +85,7 @@ var datagami = (function() {
 
       } else {
         // TODO: better error handling
-        opts.error(api_result);
+        opts.error("unexpected status in response:", api_result);
 
       }
     }
@@ -129,6 +129,38 @@ var datagami = (function() {
 
         makeRequest({
           endpoint: "/v1/text/keywords",
+          method: "POST",
+          callback: generatePollingCallback(opts),
+          error: opts.error,
+          form: opts.params
+        });
+      },
+    },
+
+    timeseries: {
+      forecast: function(opts) {
+        // some rudimentary defaults
+        if (!opts.error) { opts.error = console.log; }
+        if (!opts.params) { opts.params = {}; }
+
+        if (!opts.callback) { /* error! */ }
+
+        if (!opts.params.data_key) {
+          if (opts.data_key) {
+            opts.params.data_key = opts.data_key;
+          } else {
+            // error!
+          }
+        }
+
+        // other options for this endpoint
+        // kernel = 'SE'
+        // steps_ahead = 10
+        // parameters = "[ a, b, c ]"
+        // force_retrain = true
+
+        makeRequest({
+          endpoint: "/v1/timeseries/1D/forecast",
           method: "POST",
           callback: generatePollingCallback(opts),
           error: opts.error,
