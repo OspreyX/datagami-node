@@ -8,7 +8,13 @@
     "url": "https://github.com/datagami/nodejs-client.git"
   },
   "readmeFilename": "README.md",
-  "dependencies" : {
-    "request" : "~2.42.0"
+  "dependencies": {
+    "request": "^2.42.0"
+  },
+  "devDependencies": {
+    "mocha": "^2.0.1"
+  },
+  "scripts": {
+    "test": "node_modules/.bin/mocha test/*.js"
   }
 }
