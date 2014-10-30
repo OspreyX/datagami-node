@@ -169,6 +169,77 @@ var datagami = (function() {
       },
     },
 
+    regression: {
+      train: function(opts) {
+        // some rudimentary defaults
+        if (!opts.error) { opts.error = console.log; }
+        if (!opts.params) { opts.params = {}; }
+
+        if (!opts.callback) { /* error! */ }
+
+        if (!opts.params.data_key) {
+          if (opts.data_key) {
+            opts.params.data_key = opts.data_key;
+          } else {
+            // error!
+          }
+        }
+
+        if (!opts.params.column_to_predict) {
+          if (opts.column_to_predict) {
+            opts.params.column_to_predict = opts.column_to_predict;
+          } else {
+            // error!
+          }
+        }
+
+        if (!opts.params.parameters) {
+          // TODO: smarter handling of defaults and JSON-encoding
+          opts.params.parameters = "{ \"distribution\": \"laplace\", \"trees\": 500, \"depth\": 3, \"rate\": 0.01, \"cv\": 5 }";
+        }
+
+        makeRequest({
+          endpoint: "/v1/regression/train",
+          method: "POST",
+          callback: generatePollingCallback(opts),
+          error: opts.error,
+          form: opts.params
+        });
+      },
+      forecast: function(opts) {
+        // some rudimentary defaults
+        if (!opts.error) { opts.error = console.log; }
+        if (!opts.params) { opts.params = {}; }
+
+        if (!opts.callback) { /* error! */ }
+
+        if (!opts.params.new_data_key) {
+          if (opts.data_key) {
+            // TODO: should this be opts.new_data_key ??
+            opts.params.new_data_key = opts.data_key;
+          } else {
+            // error!
+          }
+        }
+
+        if (!opts.params.model_key) {
+          if (opts.model_key) {
+            opts.params.model_key = opts.model_key;
+          } else {
+            // error!
+          }
+        }
+
+        makeRequest({
+          endpoint: "/v1/regression/predict",
+          method: "POST",
+          callback: generatePollingCallback(opts),
+          error: opts.error,
+          form: opts.params
+        });
+      },
+    },
+
   }
 })();
 
