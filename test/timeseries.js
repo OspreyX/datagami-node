@@ -1,6 +1,7 @@
 var assert = require("assert");
 
 var datagami = require('../');
+datagami.options({ host: 'http://localhost:8888' });
 
 // United States GDP from 1960 to 2012
 // from http://www.quandl.com/api/v1/datasets/WORLDBANK/USA_NY_GDP_MKTP_KN.json?&trim_start=1960-12-31&trim_end=2012-12-31&sort_order=desc

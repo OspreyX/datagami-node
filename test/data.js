@@ -1,6 +1,7 @@
 var assert = require("assert");
 
 var datagami = require('../');
+datagami.options({ host: 'http://localhost:8888' });
 
 describe('/v1/data', function(){
   describe('upload', function(){
