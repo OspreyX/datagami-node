@@ -8,7 +8,6 @@ var request = require('request');
 var datagami = (function() {
   var options = {};
 
-  // options.host = 'http://localhost:8888';
   options.host = 'http://beta.api.datagami.net';
 
   var makeRequest = function(opts) {
@@ -94,6 +93,25 @@ var datagami = (function() {
   }
 
   return {
+    options: function(opts) {
+      if (typeof opts == 'undefined') {
+        return (null, options);
+
+      } else if (typeof opts == 'object') {
+        for (var name in opts) {
+          if (name in options) {
+            options[name] = opts[name];
+          }
+        }
+
+        return (null, options);
+
+      } else {
+        // TODO: throw instead? give the option?
+        return ({ message: 'Value of type ' + (typeof opts) + ' is not a valid option object' });
+      }
+    },
+
     upload: function(opts) {
       // some rudimentary defaults
       if (!opts.error) { opts.error = console.log; }
