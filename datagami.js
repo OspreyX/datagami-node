@@ -117,7 +117,7 @@ var datagami = (function() {
       if (!opts.error) { opts.error = console.log; }
 
       if (!opts.data) { /* error! */ }
-      if (typeof opts.data !== 'array') { /* error! */ }
+      if (typeof opts.data !== 'object' || typeof opts.data.length !== 'number' ) { /* error! */ }
       if (!opts.callback) { /* error! */ }
 
       makeRequest({
