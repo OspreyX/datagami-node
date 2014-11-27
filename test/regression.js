@@ -42,11 +42,11 @@ var bogus_forecast_data = {
     // -197.5, 267, 670
 };
 
-describe('/v1/regression', function() {
+suite('/v1/regression', function() {
   var training_data_key, model_key, forecast_data_key;
 
-  describe('bogus sample data', function() {
-    it('should return key for training data', function(done) {
+  suite('bogus sample data', function() {
+    test('should return key for training data', function(done) {
       datagami.upload({
         data: bogus_sample_data,
         callback: function(upload_result) {
@@ -61,7 +61,7 @@ describe('/v1/regression', function() {
       });
     });
 
-    it('should return key for forecast data', function(done) {
+    test('should return key for forecast data', function(done) {
       datagami.upload({
         data: bogus_forecast_data,
         callback: function(upload_result) {
@@ -76,7 +76,7 @@ describe('/v1/regression', function() {
       });
     });
 
-    it('should return a model key after training', function(done) {
+    test('should return a model key after training', function(done) {
       this.timeout(30000);
 
       datagami.regression.train({
@@ -98,7 +98,7 @@ describe('/v1/regression', function() {
 
     });
 
-    it('should predict using new data', function(done) {
+    test('should predict using new data', function(done) {
       this.timeout(30000);
 
       datagami.regression.predict({
