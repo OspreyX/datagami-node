@@ -224,7 +224,7 @@ var datagami = (function() {
           form: opts.params
         });
       },
-      forecast: function(opts) {
+      predict: function(opts) {
         // some rudimentary defaults
         if (!opts.error) { opts.error = console.log; }
         if (!opts.params) { opts.params = {}; }
