@@ -53,8 +53,8 @@ describe('/v1/regression', function() {
           training_data_key = upload_result.data_key;
 
           assert(upload_result.data_key);
-          assert.equal((typeof upload_result.data_key), 'string');
-          assert.equal(upload_result.data_key.length, 40);
+          assert.isString(upload_result.data_key);
+          assert.lengthOf(upload_result.data_key, 40);
 
           done();
         }
@@ -68,8 +68,8 @@ describe('/v1/regression', function() {
           forecast_data_key = upload_result.data_key;
 
           assert(upload_result.data_key);
-          assert.equal((typeof upload_result.data_key), 'string');
-          assert.equal(upload_result.data_key.length, 40);
+          assert.isString(upload_result.data_key);
+          assert.lengthOf(upload_result.data_key, 40);
 
           done();
         }
@@ -87,8 +87,8 @@ describe('/v1/regression', function() {
           model_key = train_result.model_key;
 
           assert(train_result.model_key);
-          assert.equal((typeof train_result.model_key), 'string');
-          assert.equal(train_result.model_key.length, 40);
+          assert.isString(train_result.model_key);
+          assert.lengthOf(train_result.model_key, 40);
 
           // console.log(train_result);
 
@@ -109,6 +109,11 @@ describe('/v1/regression', function() {
         callback: function(prediction_result) {
 
           assert.equal(prediction_result.status, 'SUCCESS')
+
+          // Check all the keys
+          assert.equal(prediction_result.data_key, training_data_key);
+          assert.equal(prediction_result.new_data_key, forecast_data_key);
+          assert.equal(prediction_result.model_key, model_key);
 
           error = 20
           assert.closeTo(prediction_result.predicted[0], -197.5, error)
