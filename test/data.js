@@ -1,7 +1,7 @@
 var assert = require('chai').assert
 
 var datagami = require('../');
-datagami.options({ host: 'http://localhost:8888' });
+datagami.options({ host: process.env.TEST_API_URL || 'http://localhost:8888' });
 
 suite('/v1/data', function(){
   suite('upload', function(){
