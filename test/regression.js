@@ -4,23 +4,25 @@ var datagami = require('../');
 datagami.options({ host: 'http://localhost:8888' });
 
 var bogus_sample_data = {
-    "Input1": [
-       1,  2,  3,  4,  5,  6,  7,  8,  9, 10
-    ],
-    "Input2": [
-       1,  1,  2,  2,  3,  3,  4,  4,  5,  5
-    ],
-    "Input3": [
-      10, 20, 10, 20, 10, 20, 10, 20, 10, 20
-    ],
-    "Input4": [
-       5,  5,  4,  4,  3,  3,  2,  2,  1,  1
-    ],
-    // price = 2*input1 + 3*input2 + input3 - input4
-    "Price": [
-      10, 22, 12, 30, 26, 38, 34, 46, 42, 54
-    ]
+    "Input1": [],
+    "Input2": [],
+    "Input3": [],
+    "Input4": [],
+    "Price": []
 };
+
+for (var i = 0; i < 1000; i ++) {
+  var n = Math.floor(10 * Math.random());
+  var m = Math.floor(100 * Math.random());
+
+  bogus_sample_data.Input1.push(i);
+  bogus_sample_data.Input2.push(n);
+  bogus_sample_data.Input3.push(m);
+  bogus_sample_data.Input4.push(i*n*m);
+
+  // price = 2*input1 + 3*input2 + input3 - input4
+  bogus_sample_data.Price.push( 2*i + 3*n + m - i*n*m );
+}
 
 var bogus_forecast_data = {
     "Input1": [
@@ -88,7 +90,7 @@ describe('/v1/regression', function() {
           assert.equal((typeof train_result.model_key), 'string');
           assert.equal(train_result.model_key.length, 40);
 
-          console.log(train_result);
+          // console.log(train_result);
 
           done();
         }
