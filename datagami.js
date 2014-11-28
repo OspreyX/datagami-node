@@ -227,7 +227,7 @@ var datagami = (function() {
           opts.params.parameters = JSON.stringify(model_params);
         } else {
           // already a string, pass through to form
-          opts.param.parameters = model_params;
+          opts.params.parameters = model_params;
         }
 
         makeRequest({
