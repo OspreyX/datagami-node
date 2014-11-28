@@ -211,9 +211,23 @@ var datagami = (function() {
           }
         }
 
-        if (!opts.params.parameters) {
-          // TODO: smarter handling of defaults and JSON-encoding
-          opts.params.parameters = "{ \"distribution\": \"laplace\", \"trees\": 500, \"depth\": 3, \"rate\": 0.01, \"cv\": 5 }";
+        var DEFAULT_REGRESSION_PARAMS = {
+          distribution: "laplace",
+          rate: 0.01,
+          depth: 3,
+          trees: 500,
+          cv: 5
+        };
+
+        model_params = opts.params.parameters || DEFAULT_REGRESSION_PARAMS;
+
+        // TODO validate JSON
+        // TODO make helper
+        if (typeof(model_params) !== 'string') {
+          opts.params.parameters = JSON.stringify(model_params);
+        } else {
+          // already a string, pass through to form
+          opts.param.parameters = model_params;
         }
 
         makeRequest({
