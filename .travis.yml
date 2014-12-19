@@ -5,5 +5,5 @@ node_js:
 env:
   global:
   - TEST_API_URL=http://develop.staging.api.datagami.net/
-  - TEST_API_KEY=travisci
-  - secure: OrecF5Nuwaq7gqohccXIPR8fCA0TlyM2ERTn1ETfJTL7B3k8CHiHi1k5TwTCuNc5K6wRmn+Lx2qNcNveisvBX6+2fiTBOHuD5vay+CNQEVLw0qqwsCYUG/2d53gpAeScN8hGCWx3bx0re6BHjb+ajVMFXTt4TkGa9zpqM5koavs=
+  - TEST_API_KEY=travis
+  - secure: D+3R5YucW1E/2HgNUZSrzhd1lKqP8d0YeZIu7vdl9ceQz1c0ovxFV1e36+2qmpls41IFwi7awyR6NshoxrrIRArA+cmMIPEQoJWkP+zAofimzWHQMdrfFvD/gzMziKfLwf+XrKCLJiPunMG67I3pEzEvFtnvxwOHzlC8IB964IE=
