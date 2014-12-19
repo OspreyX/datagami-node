@@ -51,6 +51,8 @@ suite('/v1/regression', function() {
 
   suite('bogus sample data', function() {
     test('should return key for training data', function(done) {
+      this.timeout(5000);
+
       datagami.upload({
         data: bogus_sample_data,
         callback: function(upload_result) {
@@ -66,6 +68,8 @@ suite('/v1/regression', function() {
     });
 
     test('should return key for forecast data', function(done) {
+      this.timeout(5000);
+
       datagami.upload({
         data: bogus_forecast_data,
         callback: function(upload_result) {
@@ -115,7 +119,6 @@ suite('/v1/regression', function() {
           assert.equal(prediction_result.status, 'SUCCESS')
 
           // Check all the keys
-          assert.equal(prediction_result.data_key, training_data_key);
           assert.equal(prediction_result.new_data_key, forecast_data_key);
           assert.equal(prediction_result.model_key, model_key);
 
