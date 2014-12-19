@@ -68,7 +68,7 @@ var datagami = (function() {
         // TODO: this handling is something of a hack!
         // TODO: maybe the API should just redirect
         if (poll_count === 0) {
-          url_to_poll = api_result.model_url;
+          url_to_poll = api_result.url;
           nextTick();
         } else {
           opts.callback(api_result);
@@ -76,8 +76,8 @@ var datagami = (function() {
 
       } else if (api_result.status == "SUBMITTED" || api_result.status == "RUNNING" || api_result.status == "PENDING") {
         // job still running, wait and then poll again
-        if (api_result.model_url) {
-          url_to_poll = api_result.model_url;
+        if (api_result.url) {
+          url_to_poll = api_result.url;
         }
 
         setTimeout(nextTick, 500);
