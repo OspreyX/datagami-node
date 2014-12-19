@@ -11,6 +11,8 @@ suite('/v1/data', function(){
   suite('upload', function(){
 
     test('should return a data key', function(done){
+      this.timeout(5000);
+
       datagami.upload({
         data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
         callback: function(upload_result) {
@@ -23,6 +25,8 @@ suite('/v1/data', function(){
     });
 
     test('should return a URL containing the data key', function(done){
+      this.timeout(5000);
+
       datagami.upload({
         data: [2, 4, 6, 8, 10],
         callback: function(upload_result) {
