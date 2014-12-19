@@ -9,8 +9,11 @@ var datagami = (function() {
   var options = {};
 
   options.host = 'http://beta.api.datagami.net';
+  options.api_key = '';
+  options.secret_key = '';
 
   var makeRequest = function(opts) {
+
     // some rudimentary defaults
     if (!opts.method) { opts.method = "GET"; }
     if (!opts.form) { opts.form = {}; }
@@ -22,10 +25,10 @@ var datagami = (function() {
       url: options.host + opts.endpoint,
       method: opts.method,
       form: opts.form,
-      // auth: {
-      //   username: options.api_key,
-      //   password: options.secret_key
-      // }
+      auth: {
+        username: options.api_key,
+        password: options.secret_key
+      }
     }, function(error, response, body) {
       var api_result;
 
