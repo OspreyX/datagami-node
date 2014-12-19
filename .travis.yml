@@ -6,4 +6,4 @@ env:
   global:
   - TEST_API_URL=http://develop.staging.api.datagami.net/
   - TEST_API_KEY=travisci
-  - secure: e0scSPlkcF9+S4pVsTCVyckc7feFfdDfmVwNnCFMujTA6mM3vKfs5+QL/Zj1ovymh2Zc+DJv+fiaONVjnp02LMl/DqQgJ1wk4HyQYo4vXQLz/710N1q2Ar0vyFkWqEZfiAHIsXjbFmLXbvmZ1SklyD1TRc5bHTM1w3IMioYlrnA=
+  - secure: OrecF5Nuwaq7gqohccXIPR8fCA0TlyM2ERTn1ETfJTL7B3k8CHiHi1k5TwTCuNc5K6wRmn+Lx2qNcNveisvBX6+2fiTBOHuD5vay+CNQEVLw0qqwsCYUG/2d53gpAeScN8hGCWx3bx0re6BHjb+ajVMFXTt4TkGa9zpqM5koavs=
