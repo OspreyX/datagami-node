@@ -1,7 +1,11 @@
 var assert = require('chai').assert
 
 var datagami = require('../');
-datagami.options({ host: process.env.TEST_API_URL || 'http://localhost:8888' });
+datagami.options({
+    host: process.env.TEST_API_URL || 'http://localhost:8888',
+    api_key: process.env.TEST_API_KEY,
+    secret_key: process.env.TEST_API_SECRET
+});
 
 var bogus_sample_data = {
     "Input1": [],
