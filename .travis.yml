@@ -1,8 +1,9 @@
 language: node_js
-
 node_js:
-  - "0.11"
-  - "0.10"
+- '0.11'
+- '0.10'
 
 env:
-  - TEST_API_URL=http://beta.api.datagami.net/
+- TEST_API_URL=http://develop.staging.api.datagami.net/
+- TEST_API_KEY=travisci
+- secure: DDc54OBO/yLiUoVpc9yNkYvLI9W0qM950rx0Nxapk3VQJf3c1i56S1enPIHG5+92k4YL9EekQ1PXKnojpCZcY6haWGKMctIJthcLXU8szptjQQRDHRGRslJA4crlRreaqlRvzvDMBt6SXAe1YRyijCMJMr2CfJylWoN9a8UftGo=
