@@ -9,4 +9,4 @@ env:
   - secure: D+3R5YucW1E/2HgNUZSrzhd1lKqP8d0YeZIu7vdl9ceQz1c0ovxFV1e36+2qmpls41IFwi7awyR6NshoxrrIRArA+cmMIPEQoJWkP+zAofimzWHQMdrfFvD/gzMziKfLwf+XrKCLJiPunMG67I3pEzEvFtnvxwOHzlC8IB964IE=
 notifications:
   slack:
-    secure: GEI+Ic11TPEZHQZUgVR/fUUt/6YBgYqx8FAeWtWbSJmK8Nc+giY2UthPj5RL8UPs1e9O8gklqPJ/46ESVOSIjErv2HO9fstvHZ3AvMwbMUez33yzLtCDrlI6O9TQnkgwuA3DycEqEdWCdQ/59/Gqkk2SqEspNrcMED/O/QMO3RI=
+    secure: V3EYbxG7ZWn8sNqBYVbnrW5tzmY3M2j7jAuflNOACB/4doNGseHQeOrftWbYxNClY52lJxU030AoD4p78k2f6It3KSD1Vaf6F8IuZt+J6se3xcyQDsYLA751Lb2koEjXVVWI2c3ulIY5yTA+3gXFDIQpM5ysMcAwXfMeotnU7qY=
