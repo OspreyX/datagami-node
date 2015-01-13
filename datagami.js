@@ -8,7 +8,7 @@ var request = require('request');
 var datagami = (function() {
   var options = {};
 
-  options.host = 'http://beta.api.datagami.net';
+  options.host = 'https://api.datagami.net';
   options.api_key = '';
   options.secret_key = '';
 
