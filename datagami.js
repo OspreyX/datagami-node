@@ -8,9 +8,12 @@ var request = require('request');
 var datagami = (function() {
   var options = {};
 
-  options.host = 'http://beta.api.datagami.net';
+  options.host = 'https://api.datagami.net';
+  options.api_key = '';
+  options.secret_key = '';
 
   var makeRequest = function(opts) {
+
     // some rudimentary defaults
     if (!opts.method) { opts.method = "GET"; }
     if (!opts.form) { opts.form = {}; }
@@ -22,10 +25,10 @@ var datagami = (function() {
       url: options.host + opts.endpoint,
       method: opts.method,
       form: opts.form,
-      // auth: {
-      //   username: options.api_key,
-      //   password: options.secret_key
-      // }
+      auth: {
+        username: options.api_key,
+        password: options.secret_key
+      }
     }, function(error, response, body) {
       var api_result;
 
@@ -68,7 +71,7 @@ var datagami = (function() {
         // TODO: this handling is something of a hack!
         // TODO: maybe the API should just redirect
         if (poll_count === 0) {
-          url_to_poll = api_result.model_url;
+          url_to_poll = api_result.url;
           nextTick();
         } else {
           opts.callback(api_result);
@@ -76,8 +79,8 @@ var datagami = (function() {
 
       } else if (api_result.status == "SUBMITTED" || api_result.status == "RUNNING" || api_result.status == "PENDING") {
         // job still running, wait and then poll again
-        if (api_result.model_url) {
-          url_to_poll = api_result.model_url;
+        if (api_result.url) {
+          url_to_poll = api_result.url;
         }
 
         setTimeout(nextTick, 500);

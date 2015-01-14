@@ -1,7 +1,11 @@
 var assert = require('chai').assert
 
 var datagami = require('../');
-datagami.options({ host: process.env.TEST_API_URL || 'http://localhost:8888' });
+datagami.options({
+    host: process.env.TEST_API_URL || 'http://localhost:8888',
+    api_key: process.env.TEST_API_KEY,
+    secret_key: process.env.TEST_API_SECRET
+});
 
 // United States GDP from 1960 to 2012
 // from http://www.quandl.com/api/v1/datasets/WORLDBANK/USA_NY_GDP_MKTP_KN.json?&trim_start=1960-12-31&trim_end=2012-12-31&sort_order=desc
@@ -82,6 +86,8 @@ suite('/v1/timeseries', function() {
     });
 
     test('SE kernel forecast', function(done) {
+      this.timeout(5000);
+
       datagami.timeseries.forecast({
         data_key: data_key,
         kernel: 'SE',               // TODO
