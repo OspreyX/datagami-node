@@ -31,9 +31,32 @@ var sample_data = {
 };
 
 
+var new_data_1 = {
+  "UnRate": [ 7.8 ],
+  "DTW": [ 72.75 ],
+  "CPI": [ 231.09 ],
+  "SP500": [ 1440.67 ],
+  "TRADE": [ -57431.2 ],
+  "HOUST": [ 847 ],
+  "INDPRO": [ 97.39 ]
+}
+
+
+var new_data_2 = {
+  "UnRate": [ 7.8, 7.9, 7.5, 7.5, 7.2, 6.7, 6.7, 6.1 ],
+  "DTW": [ 72.75, 73.54, 76.38, 77.72, 75.37, 76.44, 76.86, 75.91 ],
+  "CPI": [ 231.09, 231.1, 232.07, 232.86, 233.74, 234.59, 235.64, 237.69 ],
+  "SP500": [ 1440.67, 1426.19, 1569.19, 1606.28, 1681.55, 1848.36, 1872.34, 1960.23 ],
+  "TRADE": [ -57431.2, -46386.4, -45093, -50135.3, -63453.3, -50509.3, -51441.3, -61801.3 ],
+  "HOUST": [ 847, 976, 994, 831, 863, 1034, 950, 1001 ],
+  "INDPRO": [ 97.39, 98.36, 99.49, 99.61, 100.72, 101.56, 103.16, 103.92 ]
+};
+
+
 suite('/v1/timeseries/nD', function() {
 
   var data_key;
+  var model_key;
 
   suite('US macroeconomic data', function() {
     test('Data upload', function(done) {
@@ -67,6 +90,7 @@ suite('/v1/timeseries/nD', function() {
           assert.equal(forecast_result.type, 'TimeSeriesND');
 
           // for now, just check existence
+          assert(forecast_result.model_key);
           assert(forecast_result.parameters);
 
           assert.deepEqual(forecast_result.columns_to_predict, [ 'GDP', 'PAYEM' ]);
@@ -78,9 +102,64 @@ suite('/v1/timeseries/nD', function() {
           assert.equal(forecast_result.kernel, 'RQ');
           assert.equal(forecast_result.data_key, data_key);
 
+          model_key = forecast_result.model_key;
+
           done();
         }
       });
     });
+
+    test('RQ kernel: single row prediction', function(done) {
+      this.timeout(120000);
+      var new_data_key;
+
+      datagami.upload({
+        data: new_data_1,
+        callback: function(upload_result) {
+          new_data_key = upload_result.data_key;
+
+          datagami.timeseries.nD.predict({
+            data_key: new_data_key,  // TODO: this is data_key here, or params: { new_data_key: '' }
+            model_key: model_key,
+
+            callback: function(forecast_result) {
+              assert.equal(forecast_result.status, 'SUCCESS');
+              assert.equal(forecast_result.type, 'TimeSeriesND');
+
+              assert.equal(forecast_result.model_key, model_key);
+              assert.equal(forecast_result.new_data_key, new_data_key);
+
+              // for now, just check existence
+              assert(forecast_result.fit);
+              assert(forecast_result.fit_variance);
+
+              // TODO: these will fail due to float imprecision
+              // assert.deepEqual(forecast_result.predicted, {
+              //   "GDP": [
+              //     16462.9920306713, 16559.7747462812, 16641.1912301815, 16669.3936985244, 16713.5359244908, 16648.5578388521, 16731.9231718687, 16564.260701554
+              //   ],
+              //   "PAYEM": [
+              //     134693.104651942, 134686.516633793, 135302.100104536, 135453.732908389, 135878.507327792, 136320.697205983, 136488.232958679, 136840.635585051
+              //   ]
+              // });
+              // assert.deepEqual(forecast_result.predicted_variance, {
+              //   "GDP": [
+              //     49377.2946776524, 48753.9350656591, 132162.844027419, 197588.870408658, 379954.326524485, 751865.976635233, 1061685.91143886, 2141259.82360997
+              //   ],
+              //   "PAYEM": [
+              //     437223.871945933, 431704.174989068, 1170269.67091429, 1749601.13828585, 3364402.66503363, 6657589.39680524, 9400969.17054947, 18960332.214084
+              //   ]
+              // });
+
+              done();
+            }
+          });
+        }
+      });
+
+    });
+
+    // test('RQ kernel: multi-row prediction', function(done) {
+
   });
 });
