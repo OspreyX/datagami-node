@@ -177,6 +177,36 @@ var datagami = (function() {
     },
 
     timeseries: {
+      auto: function(opts) {
+        // some rudimentary defaults
+        if (!opts.error) { opts.error = console.log; }
+        if (!opts.params) { opts.params = {}; }
+
+        if (!opts.callback) { /* error! */ }
+
+        if ('poll' in opts && opts.poll === false) {
+          var callback = opts.callback;
+        } else {
+          var callback = generatePollingCallback(opts);
+        }
+
+        if (!opts.params.data_key) {
+          if (opts.data_key) {
+            opts.params.data_key = opts.data_key;
+          } else {
+            // error!
+          }
+        }
+
+        makeRequest({
+          endpoint: "/v1/timeseries/1D/auto",
+          method: "POST",
+          callback: callback,
+          error: opts.error,
+          form: opts.params
+        });
+      },
+
       forecast: function(opts) {
         // some rudimentary defaults
         if (!opts.error) { opts.error = console.log; }
