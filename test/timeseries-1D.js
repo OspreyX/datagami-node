@@ -86,7 +86,7 @@ suite('/v1/timeseries/1D', function() {
     });
 
     test('SE kernel forecast', function(done) {
-      this.timeout(5000);
+      this.timeout(120000);
 
       datagami.timeseries.forecast({
         data_key: data_key,
