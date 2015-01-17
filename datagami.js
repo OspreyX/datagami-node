@@ -188,6 +188,73 @@ var datagami = (function() {
           form: opts.params
         });
       },
+
+      nD: {
+        train: function(opts) {
+          // some rudimentary defaults
+          if (!opts.error) { opts.error = console.log; }
+          if (!opts.params) { opts.params = {}; }
+
+          if (!opts.callback) { /* error! */ }
+
+          if (!opts.params.data_key) {
+            if (opts.data_key) {
+              opts.params.data_key = opts.data_key;
+            } else {
+              // error!
+            }
+          }
+
+          // TODO: validate columns_to_predict
+          if (!opts.params.columns_to_predict) {
+            if (opts.columns_to_predict) {
+              opts.params.columns_to_predict = opts.columns_to_predict;
+            } else {
+              // error!
+            }
+          }
+
+          makeRequest({
+            endpoint: "/v1/timeseries/nD/train",
+            method: "POST",
+            callback: generatePollingCallback(opts),
+            error: opts.error,
+            form: opts.params
+          });
+        },
+        predict: function(opts) {
+          // some rudimentary defaults
+          if (!opts.error) { opts.error = console.log; }
+          if (!opts.params) { opts.params = {}; }
+
+          if (!opts.callback) { /* error! */ }
+
+          if (!opts.params.new_data_key) {
+            if (opts.data_key) {
+              // TODO: should this be opts.new_data_key ??
+              opts.params.new_data_key = opts.data_key;
+            } else {
+              // error!
+            }
+          }
+
+          if (!opts.params.model_key) {
+            if (opts.model_key) {
+              opts.params.model_key = opts.model_key;
+            } else {
+              // error!
+            }
+          }
+
+          makeRequest({
+            endpoint: "/v1/timeseries/nD/predict",
+            method: "POST",
+            callback: generatePollingCallback(opts),
+            error: opts.error,
+            form: opts.params
+          });
+        },
+      }
     },
 
     regression: {
@@ -206,6 +273,7 @@ var datagami = (function() {
           }
         }
 
+        // TODO: validate columns_to_predict
         if (!opts.params.column_to_predict) {
           if (opts.column_to_predict) {
             opts.params.column_to_predict = opts.column_to_predict;
