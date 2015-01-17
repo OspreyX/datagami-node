@@ -1,6 +1,6 @@
 {
   "name": "datagami",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "Datagami API helper library for node.js apps",
   "main": "datagami.js",
   "repository": {
