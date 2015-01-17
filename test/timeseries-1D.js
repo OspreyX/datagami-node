@@ -66,7 +66,7 @@ var sample_data = [
 ];
 
 
-suite('/v1/timeseries', function() {
+suite('/v1/timeseries/1D', function() {
 
   var data_key;
 
