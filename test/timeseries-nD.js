@@ -135,6 +135,48 @@ suite('/v1/timeseries/nD', function() {
 
               // TODO: these will fail due to float imprecision
               // assert.deepEqual(forecast_result.predicted, {
+              //   "GDP": [49377.2946776524],
+              //   "PAYEM": [437223.871945933]}
+              // });
+              // assert.deepEqual(forecast_result.predicted_variance, {
+              //   "GDP": [49377.2946776524],
+              //   "PAYEM": [437223.871945933]}
+              // });
+
+              done();
+            }
+          });
+        }
+      });
+
+    });
+
+    test('RQ kernel: multi-row prediction', function(done) {
+      this.timeout(120000);
+      var new_data_key;
+
+      datagami.upload({
+        data: new_data_2,
+        callback: function(upload_result) {
+          new_data_key = upload_result.data_key;
+
+          datagami.timeseries.nD.predict({
+            data_key: new_data_key,  // TODO: this is data_key here, or params: { new_data_key: '' }
+            model_key: model_key,
+
+            callback: function(forecast_result) {
+              assert.equal(forecast_result.status, 'SUCCESS');
+              assert.equal(forecast_result.type, 'TimeSeriesND');
+
+              assert.equal(forecast_result.model_key, model_key);
+              assert.equal(forecast_result.new_data_key, new_data_key);
+
+              // for now, just check existence
+              assert(forecast_result.fit);
+              assert(forecast_result.fit_variance);
+
+              // TODO: these will fail due to float imprecision
+              // assert.deepEqual(forecast_result.predicted, {
               //   "GDP": [
               //     16462.9920306713, 16559.7747462812, 16641.1912301815, 16669.3936985244, 16713.5359244908, 16648.5578388521, 16731.9231718687, 16564.260701554
               //   ],
@@ -158,8 +200,6 @@ suite('/v1/timeseries/nD', function() {
       });
 
     });
-
-    // test('RQ kernel: multi-row prediction', function(done) {
 
   });
 });
