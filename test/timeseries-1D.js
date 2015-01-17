@@ -85,8 +85,51 @@ suite('/v1/timeseries/1D', function() {
 
     });
 
+    test('Automatic forecast', function(done) {
+      this.timeout(180000);
+
+      datagami.timeseries.auto({
+        data_key: data_key,
+
+        callback: function(forecast_result) {
+          assert.equal(forecast_result.status, 'SUCCESS');
+          assert.equal(forecast_result.type, 'TimeSeries1Dauto');
+
+          assert.lengthOf(forecast_result.model_keys, 41);
+          assert.lengthOf(Object.keys(forecast_result.models), forecast_result.model_keys.length);
+
+          assert(forecast_result.meta_key);
+          assert(forecast_result.test_set_length);
+          assert(forecast_result.data_key);
+
+          for (var kernel in forecast_result.models) {
+            assert.equal(forecast_result.models[kernel].status, 'SUCCESS');
+            assert.equal(forecast_result.models[kernel].type, 'TimeSeries1D');
+            assert.equal(forecast_result.models[kernel].kernel, kernel);
+
+            assert.include(forecast_result.model_keys, forecast_result.models[kernel].model_key);
+
+            // TODO: there's no immediate way to fetch the generated in-sample data key
+            // assert.equal(forecast_result.models[kernel].data_key, '');
+
+            assert(forecast_result.models[kernel].parameters);
+            assert(forecast_result.models[kernel].n_ahead);
+            assert(forecast_result.models[kernel].fit);
+            assert(forecast_result.models[kernel].fit_variance);
+            assert(forecast_result.models[kernel].predicted);
+            assert(forecast_result.models[kernel].predicted_variance);
+            assert(forecast_result.models[kernel].BIC);
+            assert(forecast_result.models[kernel].prediction_error);
+            assert(forecast_result.models[kernel].log_likelihood);
+          }
+
+          done();
+        }
+      });
+    });
+
     test('SE kernel forecast', function(done) {
-      this.timeout(120000);
+      this.timeout(60000);
 
       datagami.timeseries.forecast({
         data_key: data_key,
