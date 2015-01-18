@@ -46,6 +46,20 @@ var datagami = (function() {
     });
   }
 
+  // true - job finished
+  // false - job still pending
+  // null - error
+  var testState = function(api_result) {
+    if (api_result.status == "SUCCESS") {
+      return true;
+
+    } else if (api_result.status == "SUBMITTED" || api_result.status == "RUNNING" || api_result.status == "PENDING") {
+      return false;
+    }
+
+    return null;
+  };
+
   var generatePollingCallback = function(opts) {
     // TODO: double-check scoping / closure in this block
     var poll_count = 0;
@@ -64,31 +78,33 @@ var datagami = (function() {
     var poll = function(api_result) {
       // callback for a request that we expect to have created a job
 
-      if (api_result.status == "SUCCESS") {
-        // if we haven't done any polling, this is a cached response returning,
-        // which means we need to make a separate request to the model endpoint
-        // (i.e. don't setTimeout, but do run nextTick with model URL)
-        // TODO: this handling is something of a hack!
-        // TODO: maybe the API should just redirect
-        if (poll_count === 0) {
-          url_to_poll = api_result.url;
-          nextTick();
-        } else {
-          opts.callback(api_result);
-        }
+      switch (testState(api_result)) {
+        case true:
+          // if we haven't done any polling, this is a cached response returning,
+          // which means we need to make a separate request to the model endpoint
+          // (i.e. don't setTimeout, but do run nextTick with model URL)
+          // TODO: this handling is something of a hack!
+          // TODO: maybe the API should just redirect
+          if (poll_count === 0) {
+            url_to_poll = api_result.url;
+            nextTick();
+          } else {
+            opts.callback(api_result);
+          }
+          break;
+        case false:
+          // job still running, wait and then poll again
+          if (api_result.url) {
+            url_to_poll = api_result.url;
+          }
 
-      } else if (api_result.status == "SUBMITTED" || api_result.status == "RUNNING" || api_result.status == "PENDING") {
-        // job still running, wait and then poll again
-        if (api_result.url) {
-          url_to_poll = api_result.url;
-        }
+          setTimeout(nextTick, 500);
+          break;
 
-        setTimeout(nextTick, 500);
-
-      } else {
-        // TODO: better error handling
-        opts.error("unexpected status in response:", api_result);
-
+        default:
+          // TODO: better error handling
+          opts.error("unexpected status in response:", api_result);
+          break;
       }
     }
 
@@ -115,6 +131,8 @@ var datagami = (function() {
       }
     },
 
+    testState: testState,
+
     upload: function(opts) {
       // some rudimentary defaults
       if (!opts.error) { opts.error = console.log; }
@@ -130,6 +148,33 @@ var datagami = (function() {
         error: opts.error,
         form: { data: JSON.stringify(opts.data) }
       });
+    },
+
+    data: {
+      // upload: dataUpload,
+
+      get: function(opts) {
+        // some rudimentary defaults
+        if (!opts.error) { opts.error = console.log; }
+        if (!opts.callback) { /* error! */ }
+
+        if (opts.params && opts.params.data_key) {
+          var data_key = opts.params.data_key;
+        } else if (opts.data_key) {
+          var data_key = opts.data_key
+        } else {
+          // error!
+        }
+
+        var url = '/v1/data/' + encodeURIComponent(data_key);
+
+        makeRequest({
+          endpoint: url,
+          method: "GET",
+          callback: opts.callback,
+          error: opts.error
+        });
+      }
     },
 
     text: {
@@ -159,12 +204,48 @@ var datagami = (function() {
     },
 
     timeseries: {
+      auto: function(opts) {
+        // some rudimentary defaults
+        if (!opts.error) { opts.error = console.log; }
+        if (!opts.params) { opts.params = {}; }
+
+        if (!opts.callback) { /* error! */ }
+
+        if ('poll' in opts && opts.poll === false) {
+          var callback = opts.callback;
+        } else {
+          var callback = generatePollingCallback(opts);
+        }
+
+        if (!opts.params.data_key) {
+          if (opts.data_key) {
+            opts.params.data_key = opts.data_key;
+          } else {
+            // error!
+          }
+        }
+
+        makeRequest({
+          endpoint: "/v1/timeseries/1D/auto",
+          method: "POST",
+          callback: callback,
+          error: opts.error,
+          form: opts.params
+        });
+      },
+
       forecast: function(opts) {
         // some rudimentary defaults
         if (!opts.error) { opts.error = console.log; }
         if (!opts.params) { opts.params = {}; }
 
         if (!opts.callback) { /* error! */ }
+
+        if ('poll' in opts && opts.poll === false) {
+          var callback = opts.callback;
+        } else {
+          var callback = generatePollingCallback(opts);
+        }
 
         if (!opts.params.data_key) {
           if (opts.data_key) {
@@ -183,7 +264,7 @@ var datagami = (function() {
         makeRequest({
           endpoint: "/v1/timeseries/1D/forecast",
           method: "POST",
-          callback: generatePollingCallback(opts),
+          callback: callback,
           error: opts.error,
           form: opts.params
         });
@@ -196,6 +277,12 @@ var datagami = (function() {
           if (!opts.params) { opts.params = {}; }
 
           if (!opts.callback) { /* error! */ }
+
+          if ('poll' in opts && opts.poll === false) {
+            var callback = opts.callback;
+          } else {
+            var callback = generatePollingCallback(opts);
+          }
 
           if (!opts.params.data_key) {
             if (opts.data_key) {
@@ -217,7 +304,7 @@ var datagami = (function() {
           makeRequest({
             endpoint: "/v1/timeseries/nD/train",
             method: "POST",
-            callback: generatePollingCallback(opts),
+            callback: callback,
             error: opts.error,
             form: opts.params
           });
@@ -228,6 +315,12 @@ var datagami = (function() {
           if (!opts.params) { opts.params = {}; }
 
           if (!opts.callback) { /* error! */ }
+
+          if ('poll' in opts && opts.poll === false) {
+            var callback = opts.callback;
+          } else {
+            var callback = generatePollingCallback(opts);
+          }
 
           if (!opts.params.new_data_key) {
             if (opts.data_key) {
@@ -249,7 +342,7 @@ var datagami = (function() {
           makeRequest({
             endpoint: "/v1/timeseries/nD/predict",
             method: "POST",
-            callback: generatePollingCallback(opts),
+            callback: callback,
             error: opts.error,
             form: opts.params
           });
@@ -264,6 +357,12 @@ var datagami = (function() {
         if (!opts.params) { opts.params = {}; }
 
         if (!opts.callback) { /* error! */ }
+
+        if ('poll' in opts && opts.poll === false) {
+          var callback = opts.callback;
+        } else {
+          var callback = generatePollingCallback(opts);
+        }
 
         if (!opts.params.data_key) {
           if (opts.data_key) {
@@ -304,7 +403,7 @@ var datagami = (function() {
         makeRequest({
           endpoint: "/v1/regression/train",
           method: "POST",
-          callback: generatePollingCallback(opts),
+          callback: callback,
           error: opts.error,
           form: opts.params
         });
@@ -315,6 +414,12 @@ var datagami = (function() {
         if (!opts.params) { opts.params = {}; }
 
         if (!opts.callback) { /* error! */ }
+
+        if ('poll' in opts && opts.poll === false) {
+          var callback = opts.callback;
+        } else {
+          var callback = generatePollingCallback(opts);
+        }
 
         if (!opts.params.new_data_key) {
           if (opts.data_key) {
@@ -336,7 +441,7 @@ var datagami = (function() {
         makeRequest({
           endpoint: "/v1/regression/predict",
           method: "POST",
-          callback: generatePollingCallback(opts),
+          callback: callback,
           error: opts.error,
           form: opts.params
         });

@@ -51,7 +51,7 @@ suite('/v1/regression', function() {
 
   suite('bogus sample data', function() {
     test('should return key for training data', function(done) {
-      this.timeout(5000);
+      this.timeout(30000);
 
       datagami.upload({
         data: bogus_sample_data,
@@ -68,7 +68,7 @@ suite('/v1/regression', function() {
     });
 
     test('should return key for forecast data', function(done) {
-      this.timeout(5000);
+      this.timeout(30000);
 
       datagami.upload({
         data: bogus_forecast_data,
@@ -85,7 +85,7 @@ suite('/v1/regression', function() {
     });
 
     test('should return a model key after training', function(done) {
-      this.timeout(30000);
+      this.timeout(120000);
 
       datagami.regression.train({
         data_key: training_data_key,
@@ -107,7 +107,7 @@ suite('/v1/regression', function() {
     });
 
     test('should predict using new data', function(done) {
-      this.timeout(30000);
+      this.timeout(120000);
 
       datagami.regression.predict({
         params: {
