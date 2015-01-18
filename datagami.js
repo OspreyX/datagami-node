@@ -39,7 +39,7 @@ var datagami = (function() {
       try {
         var api_result = JSON.parse(body);
       } catch (json_error) {
-        opts.error(json_error);
+        opts.error(json_error, body);
       }
 
       opts.callback(api_result);
