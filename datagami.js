@@ -150,6 +150,33 @@ var datagami = (function() {
       });
     },
 
+    data: {
+      // upload: dataUpload,
+
+      get: function(opts) {
+        // some rudimentary defaults
+        if (!opts.error) { opts.error = console.log; }
+        if (!opts.callback) { /* error! */ }
+
+        if (opts.params && opts.params.data_key) {
+          var data_key = opts.params.data_key;
+        } else if (opts.data_key) {
+          var data_key = opts.data_key
+        } else {
+          // error!
+        }
+
+        var url = '/v1/data/' + encodeURIComponent(data_key);
+
+        makeRequest({
+          endpoint: url,
+          method: "GET",
+          callback: opts.callback,
+          error: opts.error
+        });
+      }
+    },
+
     text: {
       keywords: function(opts) {
         // some rudimentary defaults
