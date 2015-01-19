@@ -133,6 +133,31 @@ var datagami = (function() {
 
     testState: testState,
 
+    model: {
+      get: function(opts) {
+        // some rudimentary defaults
+        if (!opts.error) { opts.error = console.log; }
+        if (!opts.callback) { /* error! */ }
+
+        if (opts.params && opts.params.model_key) {
+          var model_key = opts.params.model_key;
+        } else if (opts.model_key) {
+          var model_key = opts.model_key
+        } else {
+          // error!
+        }
+
+        var url = '/v1/model/' + encodeURIComponent(model_key);
+
+        makeRequest({
+          endpoint: url,
+          method: "GET",
+          callback: opts.callback,
+          error: opts.error
+        });
+      }
+    },
+
     upload: function(opts) {
       // some rudimentary defaults
       if (!opts.error) { opts.error = console.log; }
