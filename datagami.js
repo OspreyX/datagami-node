@@ -473,6 +473,104 @@ var datagami = (function() {
       },
     },
 
+    // TODO: extensively duplicated with regression (they're both GBM after all)
+    classification: {
+      train: function(opts) {
+        // some rudimentary defaults
+        if (!opts.error) { opts.error = console.log; }
+        if (!opts.params) { opts.params = {}; }
+
+        if (!opts.callback) { /* error! */ }
+
+        if ('poll' in opts && opts.poll === false) {
+          var callback = opts.callback;
+        } else {
+          var callback = generatePollingCallback(opts);
+        }
+
+        if (!opts.params.data_key) {
+          if (opts.data_key) {
+            opts.params.data_key = opts.data_key;
+          } else {
+            // error!
+          }
+        }
+
+        // TODO: validate columns_to_predict
+        if (!opts.params.column_to_predict) {
+          if (opts.column_to_predict) {
+            opts.params.column_to_predict = opts.column_to_predict;
+          } else {
+            // error!
+          }
+        }
+
+        var DEFAULT_CLASSIFICATION_PARAMS = {
+          distribution: "multinomial",  // or "bernoulli" for two-class, TODO
+          rate: 0.01,
+          depth: 3,
+          trees: 500,
+          cv: 5
+        };
+
+        model_params = opts.params.parameters || DEFAULT_CLASSIFICATION_PARAMS;
+
+        // TODO validate JSON
+        // TODO make helper
+        if (typeof(model_params) !== 'string') {
+          opts.params.parameters = JSON.stringify(model_params);
+        } else {
+          // already a string, pass through to form
+          opts.params.parameters = model_params;
+        }
+
+        makeRequest({
+          endpoint: "/v1/classification/train",
+          method: "POST",
+          callback: callback,
+          error: opts.error,
+          form: opts.params
+        });
+      },
+      predict: function(opts) {
+        // some rudimentary defaults
+        if (!opts.error) { opts.error = console.log; }
+        if (!opts.params) { opts.params = {}; }
+
+        if (!opts.callback) { /* error! */ }
+
+        if ('poll' in opts && opts.poll === false) {
+          var callback = opts.callback;
+        } else {
+          var callback = generatePollingCallback(opts);
+        }
+
+        if (!opts.params.new_data_key) {
+          if (opts.data_key) {
+            // TODO: should this be opts.new_data_key ??
+            opts.params.new_data_key = opts.data_key;
+          } else {
+            // error!
+          }
+        }
+
+        if (!opts.params.model_key) {
+          if (opts.model_key) {
+            opts.params.model_key = opts.model_key;
+          } else {
+            // error!
+          }
+        }
+
+        makeRequest({
+          endpoint: "/v1/classification/predict",
+          method: "POST",
+          callback: callback,
+          error: opts.error,
+          form: opts.params
+        });
+      },
+    },
   }
 })();
 
