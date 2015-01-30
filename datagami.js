@@ -513,7 +513,7 @@ var datagami = (function() {
           cv: 5
         };
 
-        model_params = opts.params.parameters || DEFAULT_CLASSIFICATION_PARAMS;
+        model_params = opts.params.parameters || opts.parameters || DEFAULT_CLASSIFICATION_PARAMS;
 
         // TODO validate JSON
         // TODO make helper
