@@ -218,6 +218,11 @@ var datagami = (function() {
           }
         }
 
+        // TODO submit as json instead
+        if (opts.params.exclude_words && typeof opts.params.exclude_words == 'object'){
+          opts.params.exclude_words = JSON.stringify(opts.params.exclude_words);
+        }
+
         makeRequest({
           endpoint: "/v1/text/keywords",
           method: "POST",
