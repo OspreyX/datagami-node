@@ -208,19 +208,31 @@ var datagami = (function() {
         if (!opts.error) { opts.error = console.log; }
         if (!opts.params) { opts.params = {}; }
 
+        var params = {};
+
         if (!opts.callback) { /* error! */ }
 
         if (!opts.params.data_key) {
           if (opts.data_key) {
-            opts.params.data_key = opts.data_key;
+            params.data_key = opts.data_key;
           } else {
             // error!
           }
+        } else {
+          params.data_key = opts.params.data_key;
+        }
+
+        if (opts.params.method) {
+          params.method = opts.params.method;
+        }
+
+        if (opts.params.number_of_topics) {
+          params.number_of_topics = opts.params.number_of_topics;
         }
 
         // TODO submit as json instead
         if (opts.params.exclude_words && typeof opts.params.exclude_words == 'object'){
-          opts.params.exclude_words = JSON.stringify(opts.params.exclude_words);
+          params.exclude_words = JSON.stringify(opts.params.exclude_words);
         }
 
         makeRequest({
@@ -228,7 +240,7 @@ var datagami = (function() {
           method: "POST",
           callback: generatePollingCallback(opts),
           error: opts.error,
-          form: opts.params
+          form: params
         });
       },
     },
