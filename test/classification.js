@@ -106,7 +106,7 @@ suite('/v1/classification', function() {
           // console.log(prediction_result);
 
           assert.deepEqual(
-            prediction_result.predicted_class_id,
+            prediction_result.predicted_classes,
             [1, 1, 0, 0, 1, 0, 0, 1, 1]  
           )
 
