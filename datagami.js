@@ -236,10 +236,16 @@ var datagami = (function() {
           params.exclude_words = JSON.stringify(opts.params.exclude_words);
         }
 
+        if ('poll' in opts && opts.poll === false) {
+          var callback = opts.callback;
+        } else {
+          var callback = generatePollingCallback(opts);
+        }
+
         makeRequest({
           endpoint: "/v1/text/keywords",
           method: "POST",
-          callback: generatePollingCallback(opts),
+          callback: callback,
           error: opts.error,
           form: params
         });
