@@ -132,6 +132,7 @@ var datagami = (function() {
     },
 
     testState: testState,
+    makeRequest: makeRequest,
 
     model: {
       get: function(opts) {
