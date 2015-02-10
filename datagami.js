@@ -287,6 +287,14 @@ var datagami = (function() {
         // some rudimentary defaults
         if (!opts.error) { opts.error = console.log; }
         if (!opts.params) { opts.params = {}; }
+        
+        var params = {};
+
+        params.data_key = opts.data_key || opts.params.data_key;
+
+        if (!params.data_key) {
+            // error!
+        }
 
         if (!opts.callback) { /* error! */ }
 
@@ -296,26 +304,21 @@ var datagami = (function() {
           var callback = generatePollingCallback(opts);
         }
 
-        if (!opts.params.data_key) {
-          if (opts.data_key) {
-            opts.params.data_key = opts.data_key;
-          } else {
-            // error!
-          }
-        }
+        if (opts.params.kernel) { params.kernel = opts.params.kernel; }
+        if (opts.params.steps_ahead) { params.steps_ahead = opts.params.steps_ahead; }
+        if (opts.params.parameters) { params.parameters = opts.params.parameters; }
 
         // other options for this endpoint
         // kernel = 'SE'
         // steps_ahead = 10
         // parameters = "[ a, b, c ]"
-        // force_retrain = true
 
         makeRequest({
           endpoint: "/v1/timeseries/1D/forecast",
           method: "POST",
           callback: callback,
           error: opts.error,
-          form: opts.params
+          form: params
         });
       },
 
